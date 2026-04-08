@@ -46,8 +46,8 @@ const bgFragmentShader = `
 // ─────────────────────────────────────────────
 const DEFAULTS = {
     // ── Paths ──
-    modelBasePath: '../models',
-    bgImagePath:   '../images/NeuronBG.png',
+    modelBasePath: 'https://cdn.jsdelivr.net/gh/AaryanTRahman/cpc-clinics-rtms@main/models',
+    bgImagePath:   'https://cdn.jsdelivr.net/gh/AaryanTRahman/cpc-clinics-rtms@main/images/NeuronBG.png',
 
     // ── Camera (passed through to SceneBase) ──
     fov:      30,

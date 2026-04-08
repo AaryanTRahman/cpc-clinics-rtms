@@ -122,7 +122,7 @@ const waveFragmentShader = `
 // DEFAULT PARAMS
 // ─────────────────────────────────────────────
 const DEFAULTS = {
-    modelBasePath: '../models',
+    modelBasePath: 'https://cdn.jsdelivr.net/gh/AaryanTRahman/cpc-clinics-rtms@main/models',
     machineModel:  'Machine.glb', // <--- Name of your new machine model
 
     // ── Machine Customization ──

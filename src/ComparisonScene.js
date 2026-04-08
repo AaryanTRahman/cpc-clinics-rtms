@@ -6,7 +6,7 @@ import { BrainMesh } from './BrainMesh.js';
 // DEFAULT PARAMS
 // ─────────────────────────────────────────────
 const DEFAULTS = {
-    modelBasePath: '../models',
+    modelBasePath: 'https://cdn.jsdelivr.net/gh/AaryanTRahman/cpc-clinics-rtms@main/models',
     useWindowSize: false, 
 
     // Camera

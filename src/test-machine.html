@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Overlay Scene Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #071a12; /* Matches your brand dark background */
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Prevents scrollbars */
+            font-family: sans-serif;
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            outline: none;
+        }
+        
+        /* Optional: A simple UI overlay just to prove it sits behind HTML */
+        .ui-layer {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: #46e9c0;
+            pointer-events: none;
+        }
+        .ui-layer h1 { font-size: 24px; font-weight: normal; letter-spacing: 1px; }
+
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            z-index: 100;
+            color: #46e9c0;
+            font-family: monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        input[type=range] {
+            width: 200px;
+            background: transparent;
+            cursor: pointer;
+            accent-color: #46e9c0; /* This makes the slider handle your brand green */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="ui-layer">
+    <h1>Machine Interface Protocol</h1>
+</div>
+
+<div class="controls">
+    <label for="machine-slider">EXOMIND ACTIVATION</label>
+    <input type="range" id="machine-slider" min="0" max="1" step="0.01" value="0">
+</div>
+
+<canvas id="machine-canvas"></canvas>
+
+<!-- Import Maps for ThreeJS -->
+<script type="importmap">
+{
+    "imports": {
+        "three":         "https://unpkg.com/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+    }
+}
+</script>
+
+<script type="module">
+    import { initMachineScene } from './MachineScene.js';
+
+    const canvas = document.getElementById('machine-canvas');
+
+    // Initialize the scene! 
+    // You can adjust any of these parameters to dial in the look.
+    const sceneData = await initMachineScene(canvas, {
+        modelBasePath: '/models',
+        machineModel: 'Machine.glb', // <--- UPDATE THIS TO YOUR GLB NAME
+        
+    });
+    
+    // Example: If you want to log the machine group to inspect it in DevTools:
+    // console.log("Machine loaded:", sceneData.machineGroup);
+
+    // 2. Select the slider
+    const slider = document.getElementById('machine-slider');
+
+    // 3. Listen for input
+    slider.addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        
+        // This single line updates the Brain's neurons, 
+        // the Machine's visibility, and the Machine's opacity!
+        sceneData.setMachineOn(value);
+    });
+
+</script>
+
+<!-- <script type="module">
+    import { initMachineScene } from './MachineScene.js';
+
+    const canvas = document.getElementById('machine-canvas');
+
+    // Add a try/catch block to see exactly what's failing
+    async function start() {
+        try {
+            console.log("Attempting to load scene...");
+            const sceneData = await initMachineScene(canvas, {
+                modelBasePath: '/models', // Check if this folder ACTUALLY exists at your root
+                machineModel: 'Machine.glb',
+            });
+            console.log("Scene loaded successfully!");
+        } catch (err) {
+            console.error("SCENE LOAD FAILED:", err);
+            // This will print the specific GLB file path that is 404-ing
+        }
+    }
+
+    start();
+</script> -->
+
+</body>
+</html>

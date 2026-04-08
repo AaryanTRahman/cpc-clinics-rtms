@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison Scene Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #071a12;
+            font-family: 'Georgia', serif;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Outer layout ── */
+        .comparison-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 620px; /* Locked height */
+        }
+
+        /* ── Text column (left) ── */
+        .text-col {
+            flex: 0 0 380px; /* Locked width */
+            height: 620px;
+            display: flex;
+            flex-direction: column;
+            z-index: 10; /* Keep text safely above the invisible canvas edges */
+        }
+
+        .text-half {
+            flex: 1; /* Automatically sets height to exactly 310px (50%) */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+            padding: 32px 24px 32px 0;
+        }
+
+        .text-half.top {
+            border-bottom: 1px solid #1e3a2a;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #46e9c0;
+            opacity: 0.6;
+            font-family: monospace;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 1.35;
+        }
+
+        .text-half.top .section-title { color: #888888; }
+        .text-half.bottom .section-title { color: #ffffff; }
+
+        .descriptor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .descriptor-box {
+            border: 1px solid #1a3a2a;
+            border-radius: 6px;
+            padding: 9px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.015);
+        }
+
+        .text-half.bottom .descriptor-box {
+            border-color: #1e5a3a;
+            background: rgba(70, 233, 192, 0.03);
+        }
+
+        .descriptor-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #1a3028;
+            flex-shrink: 0;
+        }
+
+        .text-half.bottom .descriptor-icon { background: #1a4a36; }
+
+        .descriptor-text {
+            font-size: 13px;
+            color: #556655;
+            line-height: 1.4;
+            font-family: sans-serif;
+        }
+
+        .text-half.bottom .descriptor-text { color: #7ab89a; }
+
+        /* ── Canvas column (right) ── */
+            .canvas-col {
+                flex: 0 0 600px; /* HUGE width increase to stop horizontal clipping */
+                height: 850px;   /* HUGE height increase to stop vertical clipping */
+                margin-left: -60px; /* Pulls the canvas left, overlapping it behind the text so the brains stay close */
+                position: relative;
+                z-index: 1; /* Places the invisible padding behind your text UI */
+                pointer-events: none; /* Prevents the invisible overlapping box from blocking text selection */
+            }
+
+            /* Force canvas to obey the 320x620 flex box */
+            canvas {
+                position: absolute !important;
+                inset: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                display: block;
+                outline: none;
+            }
+
+        .divider {
+            position: absolute;
+            left: 60px; /* Pushes the start of the line back to compensate for the -120px margin above */
+            right: 0;
+            top: 50%; /* Draws EXACTLY on the 310px Y-axis line */
+            transform: translateY(-50%);
+            height: 1px;
+            background: linear-gradient(to right, #1e3a2a 0%, #2a6e5a 15%, #46e9c0 50%, #2a6e5a 85%, transparent);
+            pointer-events: none;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="comparison-wrapper">
+
+    <!-- Left: text UI -->
+    <div class="text-col">
+
+        <div class="text-half top">
+            <span class="section-label">Without EXOMIND / rTMS</span>
+            <h2 class="section-title">Underactive neural circuits</h2>
+            <div class="descriptor-list">
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor one</span>
+                </div>
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor two</span>
+                </div>
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor three</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-half bottom">
+            <span class="section-label">With EXOMIND / rTMS</span>
+            <h2 class="section-title">Stimulated, reconnected networks</h2>
+            <div class="descriptor-list">
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor one</span>
+                </div>
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor two</span>
+                </div>
+                <div class="descriptor-box">
+                    <div class="descriptor-icon"></div>
+                    <span class="descriptor-text">Placeholder descriptor three</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right: 3D canvas — absolutely positioned inside fixed-size col, never shifts layout -->
+    <div class="canvas-col">
+        <canvas id="comparison-canvas"></canvas>
+        <div class="divider"></div>
+    </div>
+
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three":         "https://unpkg.com/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+    }
+}
+</script>
+
+<script type="module">
+    import { initComparisonScene } from './ComparisonScene.js';
+
+    const canvas = document.getElementById('comparison-canvas');
+
+    await initComparisonScene(canvas, {
+        modelBasePath: '/models',
+    });
+</script>
+
+</body>
+</html>
